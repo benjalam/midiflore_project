@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321115851) do
+ActiveRecord::Schema.define(version: 20170321150526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,21 +32,21 @@ ActiveRecord::Schema.define(version: 20170321115851) do
   create_table "harvest_details", force: :cascade do |t|
     t.string   "quantity"
     t.string   "time"
-    t.integer  "products_id"
-    t.integer  "harvests_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["harvests_id"], name: "index_harvest_details_on_harvests_id", using: :btree
-    t.index ["products_id"], name: "index_harvest_details_on_products_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "harvest_id"
+    t.integer  "product_id"
+    t.index ["harvest_id"], name: "index_harvest_details_on_harvest_id", using: :btree
+    t.index ["product_id"], name: "index_harvest_details_on_product_id", using: :btree
   end
 
   create_table "harvests", force: :cascade do |t|
     t.date     "date"
     t.string   "total"
-    t.integer  "employees_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["employees_id"], name: "index_harvests_on_employees_id", using: :btree
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "employee_id"
+    t.index ["employee_id"], name: "index_harvests_on_employee_id", using: :btree
   end
 
   create_table "inventory_histories", force: :cascade do |t|
@@ -57,30 +57,28 @@ ActiveRecord::Schema.define(version: 20170321115851) do
   end
 
   create_table "inventory_transactions", force: :cascade do |t|
-    t.integer  "products_id"
-    t.integer  "harvests_id"
-    t.integer  "order_detail_id"
-    t.integer  "purchase_details_id"
-    t.integer  "manual_details_id"
     t.string   "quantity"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
-    t.index ["harvests_id"], name: "index_inventory_transactions_on_harvests_id", using: :btree
+    t.integer  "manual_details_id"
+    t.integer  "order_details_id"
+    t.integer  "purchase_details_id"
+    t.integer  "harvest_details_id"
+    t.index ["harvest_details_id"], name: "index_inventory_transactions_on_harvest_details_id", using: :btree
     t.index ["manual_details_id"], name: "index_inventory_transactions_on_manual_details_id", using: :btree
-    t.index ["order_detail_id"], name: "index_inventory_transactions_on_order_detail_id", using: :btree
-    t.index ["products_id"], name: "index_inventory_transactions_on_products_id", using: :btree
+    t.index ["order_details_id"], name: "index_inventory_transactions_on_order_details_id", using: :btree
     t.index ["purchase_details_id"], name: "index_inventory_transactions_on_purchase_details_id", using: :btree
   end
 
   create_table "manual_details", force: :cascade do |t|
     t.string   "quantity"
     t.string   "price"
-    t.integer  "products_id"
-    t.integer  "manuals_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["manuals_id"], name: "index_manual_details_on_manuals_id", using: :btree
-    t.index ["products_id"], name: "index_manual_details_on_products_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "product_id"
+    t.integer  "manual_id"
+    t.index ["manual_id"], name: "index_manual_details_on_manual_id", using: :btree
+    t.index ["product_id"], name: "index_manual_details_on_product_id", using: :btree
   end
 
   create_table "manuals", force: :cascade do |t|
@@ -93,21 +91,21 @@ ActiveRecord::Schema.define(version: 20170321115851) do
   create_table "order_details", force: :cascade do |t|
     t.string   "quantity"
     t.string   "price"
-    t.integer  "products_id"
-    t.integer  "orders_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["orders_id"], name: "index_order_details_on_orders_id", using: :btree
-    t.index ["products_id"], name: "index_order_details_on_products_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "order_id"
+    t.integer  "product_id"
+    t.index ["order_id"], name: "index_order_details_on_order_id", using: :btree
+    t.index ["product_id"], name: "index_order_details_on_product_id", using: :btree
   end
 
   create_table "orders", force: :cascade do |t|
     t.date     "date"
     t.string   "total"
-    t.integer  "clients_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["clients_id"], name: "index_orders_on_clients_id", using: :btree
+    t.integer  "client_id"
+    t.index ["client_id"], name: "index_orders_on_client_id", using: :btree
   end
 
   create_table "products", force: :cascade do |t|
@@ -125,18 +123,18 @@ ActiveRecord::Schema.define(version: 20170321115851) do
     t.integer  "purchase_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "product_id"
+    t.index ["product_id"], name: "index_purchase_details_on_product_id", using: :btree
     t.index ["purchase_id"], name: "index_purchase_details_on_purchase_id", using: :btree
   end
 
   create_table "purchases", force: :cascade do |t|
     t.date     "date"
     t.string   "total"
-    t.integer  "suppliers_id"
-    t.integer  "products_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["products_id"], name: "index_purchases_on_products_id", using: :btree
-    t.index ["suppliers_id"], name: "index_purchases_on_suppliers_id", using: :btree
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "supplier_id"
+    t.index ["supplier_id"], name: "index_purchases_on_supplier_id", using: :btree
   end
 
   create_table "suppliers", force: :cascade do |t|
@@ -164,20 +162,5 @@ ActiveRecord::Schema.define(version: 20170321115851) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_foreign_key "harvest_details", "harvests", column: "harvests_id"
-  add_foreign_key "harvest_details", "products", column: "products_id"
-  add_foreign_key "harvests", "employees", column: "employees_id"
-  add_foreign_key "inventory_transactions", "harvests", column: "harvests_id"
-  add_foreign_key "inventory_transactions", "manual_details", column: "manual_details_id"
-  add_foreign_key "inventory_transactions", "order_details"
-  add_foreign_key "inventory_transactions", "products", column: "products_id"
-  add_foreign_key "inventory_transactions", "purchase_details", column: "purchase_details_id"
-  add_foreign_key "manual_details", "manuals", column: "manuals_id"
-  add_foreign_key "manual_details", "products", column: "products_id"
-  add_foreign_key "order_details", "orders", column: "orders_id"
-  add_foreign_key "order_details", "products", column: "products_id"
-  add_foreign_key "orders", "clients", column: "clients_id"
   add_foreign_key "purchase_details", "purchases"
-  add_foreign_key "purchases", "products", column: "products_id"
-  add_foreign_key "purchases", "suppliers", column: "suppliers_id"
 end

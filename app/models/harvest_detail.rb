@@ -1,4 +1,5 @@
 class HarvestDetail < ApplicationRecord
-  belongs_to :products
-  belongs_to :harvests
+  belongs_to :product
+  belongs_to :harvest
+  has_many :inventory_transactions
 end
